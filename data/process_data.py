@@ -37,6 +37,7 @@ def clean_data(df):
 
     df.drop(["id", "original", "categories"], axis=1, inplace=True)
     df = pd.concat([df, categories], axis=1, join="inner")
+    df = df[df['related'] != 2]
     df.drop_duplicates(inplace=True)
 
     return df
