@@ -1,4 +1,5 @@
 import json
+from unicodedata import category
 import plotly
 import pandas as pd
 import re
@@ -18,6 +19,14 @@ app = Flask(__name__)
 
 
 def tokenize(text):
+    """Tokenizer
+
+    Args:
+        text (str): A message
+
+    Returns:
+        list: Word tokens
+    """
     stop_words = set(stopwords.words('english'))
     lemmatizer = WordNetLemmatizer()
     text = re.sub('[^A-Za-z0-9]+', ' ', text)
@@ -45,6 +54,9 @@ def index():
     genre_counts = df.groupby('genre').count()['message']
     genre_names = list(genre_counts.index)
 
+    category_counts = df.drop(["message", "genre"], axis=1).sum()
+    category_names = df.drop(["message", "genre"], axis=1).columns
+
     # create visuals
     # TODO: Below is an example - modify to create your own visuals
     graphs = [
@@ -63,6 +75,24 @@ def index():
                 },
                 'xaxis': {
                     'title': "Genre"
+                }
+            }
+        },
+        {
+            'data': [
+                Bar(
+                    x=category_names,
+                    y=category_counts
+                )
+            ],
+
+            'layout': {
+                'title': 'Distribution of Category',
+                'yaxis': {
+                    'title': "Count"
+                },
+                'xaxis': {
+                    'title': "Category"
                 }
             }
         }
