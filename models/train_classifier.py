@@ -25,6 +25,14 @@ lemmatizer = WordNetLemmatizer()
 
 
 def load_data(database_filepath):
+    """Load data from SQLite
+
+    Args:
+        database_filepath (str): database filepath
+
+    Returns:
+        DataFrame, DataFrame, Series: X, y, categorical names
+    """
     engine = create_engine(f'sqlite:///{database_filepath}')
     df = pd.read_sql_table("disaster_messages_tbl", engine)
     X = df["message"]
@@ -33,6 +41,14 @@ def load_data(database_filepath):
 
 
 def tokenize(text):
+    """Tokenizer
+
+    Args:
+        text (str): A message
+
+    Returns:
+        list: Word tokens
+    """
     text = re.sub('[^A-Za-z0-9]+', ' ', text)
     text = text.lower()
     token = word_tokenize(text)
@@ -41,6 +57,11 @@ def tokenize(text):
 
 
 def build_model():
+    """Build process and model pipeline
+
+    Returns:
+        _type_: _description_
+    """
     pipeline = Pipeline([
         ("Bag of Words", CountVectorizer(tokenizer=tokenize)),
         ("TF-IDF", TfidfTransformer()),
@@ -55,6 +76,14 @@ def build_model():
 
 
 def evaluate_model(model, X_test, Y_test, category_names):
+    """Evaluate model
+
+    Args:
+        model (_type_): _description_
+        X_test (DataFrame): X
+        Y_test (DataFrame): y
+        category_names (Series): categorical names
+    """
     Y_pred = model.best_estimator_.predict(X_test)
     for i, col_name in enumerate(category_names):
         print(f"Category: {col_name.upper()}")
@@ -63,6 +92,12 @@ def evaluate_model(model, X_test, Y_test, category_names):
 
 
 def save_model(model, model_filepath):
+    """Save model to pkl
+
+    Args:
+        model (_type_): _description_
+        model_filepath (str): model filepath
+    """
     joblib.dump(model, model_filepath)
 
 
