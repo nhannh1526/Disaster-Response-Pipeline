@@ -20,8 +20,7 @@
 
 ## Project Motivation<a name="motivation"></a>
 
-The goal of this project is to classify the disaster messages into categories. 
-
+In this project I will use messages that were sent during disaster events and build a machine learning to identify messages or events in need of attention or relief.
 
 ## Project Descriptions<a name="project"></a>
 
